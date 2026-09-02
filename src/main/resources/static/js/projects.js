@@ -1,53 +1,39 @@
-// Project Management JavaScript
-
 let projectList = [];
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadProjects();
-});
+document.addEventListener('DOMContentLoaded', loadProjects);
 
-// Load all projects
 async function loadProjects() {
     try {
         projectList = await apiRequest('/projects');
         renderProjectTable(projectList);
-    } catch (error) {
-        showAlert('alertContainer', 'Error loading projects: ' + error.message);
+    } catch (err) {
+        showAlert('alertContainer', 'Error loading projects: ' + err.message);
     }
 }
 
-// Render project table rows
 function renderProjectTable(projects) {
     const tbody = document.getElementById('projectTableBody');
-    if (!projects || projects.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No student projects found.</td></tr>';
+    if (!projects || !projects.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No projects found.</td></tr>';
         return;
     }
 
-    tbody.innerHTML = projects.map(project => {
-        const skillsBadges = (project.requiredSkills || '')
-            .split(',')
-            .map(s => `<span class="badge badge-skill">${s.trim()}</span>`)
-            .join(' ');
-
-        return `
-            <tr>
-                <td><strong>${escapeHtml(project.projectName)}</strong></td>
-                <td><span class="badge badge-warning">${escapeHtml(project.createdByName || 'Student Lead')}</span></td>
-                <td>${escapeHtml(project.description || '-')}</td>
-                <td>${skillsBadges}</td>
-                <td><span class="badge badge-info">${project.teamSize} Members</span></td>
-                <td>
-                    <a href="generate-team.html?projectId=${project.id}" class="btn btn-primary btn-sm">Find Teammates</a>
-                    <button class="btn btn-secondary btn-sm" onclick="editProject(${project.id})">Edit</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteProject(${project.id})">Delete</button>
-                </td>
-            </tr>
-        `;
+    tbody.innerHTML = projects.map(p => {
+        const skills = (p.requiredSkills || '').split(',').map(s => `<span class="badge badge-skill">${s.trim()}</span>`).join(' ');
+        return `<tr>
+            <td><strong>${escapeHtml(p.projectName)}</strong></td>
+            <td><span class="badge badge-info">${escapeHtml(p.createdByName || 'Student Lead')}</span></td>
+            <td>${escapeHtml(p.description || '-')}</td>
+            <td>${skills}</td>
+            <td><strong>${p.teamSize} Members</strong></td>
+            <td>
+                <button class="btn btn-secondary btn-sm" onclick="editProject(${p.id})">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteProject(${p.id})">Delete</button>
+            </td>
+        </tr>`;
     }).join('');
 }
 
-// Open modal for add
 function openProjectModal() {
     document.getElementById('projectId').value = '';
     document.getElementById('projectForm').reset();
@@ -55,34 +41,26 @@ function openProjectModal() {
     document.getElementById('projectModal').classList.add('active');
 }
 
-// Close modal
 function closeProjectModal() {
     document.getElementById('projectModal').classList.remove('active');
 }
 
-// Open modal for edit
 function editProject(id) {
-    const project = projectList.find(p => p.id === id);
-    if (!project) return;
-
-    document.getElementById('projectId').value = project.id;
-    document.getElementById('projectName').value = project.projectName;
-    document.getElementById('createdByName').value = project.createdByName || '';
-    document.getElementById('description').value = project.description || '';
-    document.getElementById('requiredSkills').value = project.requiredSkills;
-    document.getElementById('teamSize').value = project.teamSize;
-
+    const p = projectList.find(item => item.id === id);
+    if (!p) return;
+    ['projectId', 'projectName', 'createdByName', 'description', 'requiredSkills', 'teamSize'].forEach(f => {
+        const el = document.getElementById(f);
+        if (el) el.value = p[f === 'projectId' ? 'id' : f] || '';
+    });
     document.getElementById('modalTitle').textContent = 'Edit Project';
     document.getElementById('projectModal').classList.add('active');
 }
 
-// Save project (Add / Update)
 async function saveProject(event) {
     event.preventDefault();
     clearAlert('alertContainer');
-
     const id = document.getElementById('projectId').value;
-    const projectData = {
+    const data = {
         projectName: document.getElementById('projectName').value.trim(),
         createdByName: document.getElementById('createdByName').value.trim(),
         description: document.getElementById('description').value.trim(),
@@ -92,49 +70,27 @@ async function saveProject(event) {
 
     try {
         if (id) {
-            await apiRequest(`/projects/${id}`, {
-                method: 'PUT',
-                body: JSON.stringify(projectData)
-            });
+            await apiRequest(`/projects/${id}`, { method: 'PUT', body: JSON.stringify(data) });
             showAlert('alertContainer', 'Project updated successfully!', 'success');
         } else {
-            await apiRequest('/projects', {
-                method: 'POST',
-                body: JSON.stringify(projectData)
-            });
+            await apiRequest('/projects', { method: 'POST', body: JSON.stringify(data) });
             showAlert('alertContainer', 'Project posted successfully!', 'success');
         }
-
         closeProjectModal();
         loadProjects();
-    } catch (error) {
-        alert('Error: ' + error.message);
+    } catch (err) {
+        alert('Error: ' + err.message);
     }
 }
 
-// Delete project
 async function deleteProject(id) {
-    if (!confirm('Deleting this project will also reset any generated teams for it. Continue?')) return;
+    if (!confirm('Are you sure you want to delete this project?')) return;
     clearAlert('alertContainer');
-
     try {
         await apiRequest(`/projects/${id}`, { method: 'DELETE' });
-        showAlert('alertContainer', 'Project and associated teams deleted.', 'success');
+        showAlert('alertContainer', 'Project deleted successfully.', 'success');
         loadProjects();
-    } catch (error) {
-        showAlert('alertContainer', 'Failed to delete project: ' + error.message);
+    } catch (err) {
+        showAlert('alertContainer', 'Failed to delete project: ' + err.message);
     }
-}
-
-function escapeHtml(text) {
-    if (!text) return '';
-    return text.replace(/[&<>"']/g, function(m) {
-        return {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        }[m];
-    });
 }
