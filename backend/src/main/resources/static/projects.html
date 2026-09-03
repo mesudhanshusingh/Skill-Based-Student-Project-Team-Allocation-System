@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Projects Directory - Team Allocation System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="index.html" class="brand">Team Allocation System</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="student-register.html">Register / My Skills</a></li>
+                <li><a href="students.html">Students</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+                <li><a href="generate-team.html">Find Teammates</a></li>
+                <li><a href="teams.html">Teams</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Student Projects Directory</h1>
+                <p class="page-subtitle">View student project ideas, required skills, and post your own project</p>
+            </div>
+            <button class="btn btn-primary" onclick="openProjectModal()">Post My Project</button>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="card-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Posted By</th>
+                        <th>Description</th>
+                        <th>Required Skills</th>
+                        <th>Team Size</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="projectTableBody">
+                    <tr><td colspan="6" style="text-align:center;">Loading projects...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Post Student Project</h3>
+                <button class="close-btn" onclick="closeProjectModal()">&times;</button>
+            </div>
+            <form id="projectForm" onsubmit="saveProject(event)">
+                <input type="hidden" id="projectId">
+                <div class="form-group">
+                    <label for="projectName">Project Title *</label>
+                    <input type="text" id="projectName" class="input-control" required placeholder="e.g. Online Food Delivery Web App">
+                </div>
+                <div class="form-group">
+                    <label for="createdByName">Student Project Lead / Creator Name *</label>
+                    <input type="text" id="createdByName" class="input-control" required placeholder="e.g. Sudhanshu Singh">
+                </div>
+                <div class="form-group">
+                    <label for="description">Project Description</label>
+                    <textarea id="description" class="input-control" rows="3" placeholder="Brief overview of what you want to build..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="requiredSkills">Required Teammate Skills (Comma Separated) *</label>
+                    <input type="text" id="requiredSkills" class="input-control" required placeholder="e.g. HTML, CSS, JavaScript, Testing">
+                </div>
+                <div class="form-group">
+                    <label for="teamSize">Total Team Members Needed *</label>
+                    <input type="number" id="teamSize" class="input-control" required min="1" max="10" value="4">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeProjectModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save & Post Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer></footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/projects.js"></script>
+</body>
+</html>

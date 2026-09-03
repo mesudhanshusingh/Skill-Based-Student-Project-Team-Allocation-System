@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registered Students - Team Allocation System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="index.html" class="brand">Team Allocation System</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="student-register.html">Register / My Skills</a></li>
+                <li><a href="students.html" class="active">Students</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="generate-team.html">Find Teammates</a></li>
+                <li><a href="teams.html">Teams</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Registered Students & Skills</h1>
+                <p class="page-subtitle">View all registered student profiles, skills, and allocation status</p>
+            </div>
+            <a href="student-register.html" class="btn btn-primary">Add My Profile & Skills</a>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" class="input-control" placeholder="Search by name, roll number, branch, or skill..." oninput="handleSearch()">
+        </div>
+
+        <div class="card-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Branch</th>
+                        <th>Sem</th>
+                        <th>Skills</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    <tr><td colspan="8" style="text-align:center;">Loading students...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="studentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Edit Student Profile</h3>
+                <button class="close-btn" onclick="closeStudentModal()">&times;</button>
+            </div>
+            <form id="studentForm" onsubmit="saveStudent(event)">
+                <input type="hidden" id="studentId">
+                <div class="form-group">
+                    <label for="rollNumber">Roll Number *</label>
+                    <input type="text" id="rollNumber" class="input-control" required placeholder="e.g. CS202401">
+                </div>
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" class="input-control" required placeholder="e.g. Sudhanshu Singh">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" class="input-control" required placeholder="e.g. rathoresudhanshu@gmail.com">
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 2;">
+                        <label for="branch">Branch *</label>
+                        <input type="text" id="branch" class="input-control" required placeholder="e.g. Computer Science">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="semester">Semester *</label>
+                        <input type="number" id="semester" class="input-control" required min="1" max="8" value="6">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="skills">Skills (Comma Separated) *</label>
+                    <input type="text" id="skills" class="input-control" required placeholder="e.g. Java, Spring Boot">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeStudentModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer></footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/students.js"></script>
+</body>
+</html>

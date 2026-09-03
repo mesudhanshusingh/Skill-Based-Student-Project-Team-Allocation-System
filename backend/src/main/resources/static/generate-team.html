@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Teammates - Team Allocation System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="index.html" class="brand">Team Allocation System</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="student-register.html">Register / My Skills</a></li>
+                <li><a href="students.html">Students</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="generate-team.html" class="active">Find Teammates</a></li>
+                <li><a href="teams.html">Teams</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Find Teammates & Custom Team Builder</h1>
+                <p class="page-subtitle">Auto-suggest 1 team or manually pick, add, and remove teammates with live skill coverage matching</p>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="card-table" style="padding: 1.5rem; margin-bottom: 2rem;">
+            <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--primary);">Select Project</h2>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="projectSelect">Choose Target Project *</label>
+                <select id="projectSelect" class="input-control" onchange="onProjectSelectChange()">
+                    <option value="">-- Select a Project --</option>
+                </select>
+            </div>
+
+            <div id="projectPreview" style="display: none; background-color: var(--background); padding: 1.25rem; border-radius: var(--radius); border: 1px solid var(--border); margin-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 id="previewTitle" style="font-size: 1.15rem; color: var(--primary);"></h3>
+                    <span id="previewCreator" class="badge badge-warning"></span>
+                </div>
+                <p id="previewDesc" style="color: var(--text-secondary); margin: 0.25rem 0 0.75rem 0;"></p>
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                    <div>
+                        <strong>Required Skills:</strong>
+                        <div id="previewSkills" style="margin-top: 0.25rem;"></div>
+                    </div>
+                    <div>
+                        <strong>Team Size Needed:</strong>
+                        <div id="previewTeamSize" style="margin-top: 0.25rem; font-weight: bold;"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="autoSuggestOneTeam()">Auto Suggest 1 Team</button>
+                    <button class="btn btn-secondary" onclick="clearSelectedTeam()">Clear Team Selection</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="workspaceSection" style="display: none;">
+            <div class="card-table" style="padding: 1.25rem; margin-bottom: 1.5rem; border-left: 4px solid var(--primary);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h3 style="font-size: 1.1rem; color: var(--primary);" id="teamNameHeading">Current Team Composition</h3>
+                        <div style="display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem; flex-wrap: wrap;">
+                            <span>Members Selected: <strong id="memberCountBadge">0 / 4</strong></span>
+                            <span>Skill Coverage: <span class="badge badge-success" id="skillCoverageBadge" style="font-size: 0.85rem;">0%</span></span>
+                        </div>
+                        <div id="missingSkillsDisplay" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--danger);"></div>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="saveFinalTeam()">Save Final Team</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem;">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <h3 style="font-size: 1.1rem;">Selected Team Members</h3>
+                        <span class="badge badge-info" id="selectedCountBadge">0 Members</span>
+                    </div>
+                    <div id="selectedMembersContainer" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+                </div>
+
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <h3 style="font-size: 1.1rem;">Available Registered Students</h3>
+                        <span class="badge badge-warning" id="availableCountBadge">0 Candidates</span>
+                    </div>
+                    <div id="availableCandidatesContainer" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/generate-team.js"></script>
+</body>
+</html>

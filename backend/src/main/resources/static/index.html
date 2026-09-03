@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Team Allocation System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="index.html" class="brand">Team Allocation System</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Dashboard</a></li>
+                <li><a href="student-register.html">Register / My Skills</a></li>
+                <li><a href="students.html">Students</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="generate-team.html">Find Teammates</a></li>
+                <li><a href="teams.html">Teams</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Team Allocation System</h1>
+                <p class="page-subtitle">Register student skills, post project ideas, and automatically match project teams</p>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <a href="student-register.html" class="btn btn-secondary">Add My Skills</a>
+                <a href="generate-team.html" class="btn btn-primary">Find Teammates</a>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="stats-grid">
+            <a href="students.html" class="stat-card-link">
+                <div class="stat-card">
+                    <span class="stat-title">Registered Students</span>
+                    <span class="stat-value" id="totalStudents">-</span>
+                </div>
+            </a>
+            <a href="projects.html" class="stat-card-link">
+                <div class="stat-card">
+                    <span class="stat-title">Student Projects</span>
+                    <span class="stat-value" id="totalProjects">-</span>
+                </div>
+            </a>
+            <a href="teams.html" class="stat-card-link">
+                <div class="stat-card">
+                    <span class="stat-title">Teams Formed</span>
+                    <span class="stat-value" id="totalTeams">-</span>
+                </div>
+            </a>
+            <a href="generate-team.html" class="stat-card-link">
+                <div class="stat-card">
+                    <span class="stat-title">Available Teammates</span>
+                    <span class="stat-value unallocated" id="unallocatedStudents">-</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="card-table" style="padding: 2rem; margin-top: 1.5rem;">
+            <h2 style="font-size: 1.35rem; margin-bottom: 1rem; color: var(--primary);">How It Works for Students</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.75rem; margin-top: 1rem;">
+                <div style="background-color: var(--background); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border);">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">1. Enter Your Skills</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">Register your student profile and list the skills you know (e.g. Java, SQL, Spring Boot, HTML, Testing).</p>
+                    <a href="student-register.html" class="btn btn-secondary btn-sm" style="margin-top: 1rem;">Go to Profile & Skills</a>
+                </div>
+                <div style="background-color: var(--background); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border);">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">2. Post Your Project Idea</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">Want to build a project? Define project requirements, required skills, and team size needed.</p>
+                    <a href="projects.html" class="btn btn-secondary btn-sm" style="margin-top: 1rem;">Post Project</a>
+                </div>
+                <div style="background-color: var(--background); padding: 1.5rem; border-radius: var(--radius); border: 1px solid var(--border);">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">3. Match & Form Team</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">Select your project, view candidate student skills, auto-suggest or manually add/remove team members.</p>
+                    <a href="generate-team.html" class="btn btn-primary btn-sm" style="margin-top: 1rem;">Find Teammates</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const stats = await apiRequest('/dashboard/stats');
+                document.getElementById('totalStudents').textContent = stats.totalStudents || 0;
+                document.getElementById('totalProjects').textContent = stats.totalProjects || 0;
+                document.getElementById('totalTeams').textContent = stats.totalTeams || 0;
+                document.getElementById('unallocatedStudents').textContent = stats.unallocatedStudents || 0;
+            } catch (error) {
+                showAlert('alertContainer', 'Failed to load dashboard stats.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allocated Teams - Team Allocation System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="index.html" class="brand">Team Allocation System</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="student-register.html">Register / My Skills</a></li>
+                <li><a href="students.html">Students</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="generate-team.html">Find Teammates</a></li>
+                <li><a href="teams.html" class="active">Teams</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Allocated Project Teams</h1>
+                <p class="page-subtitle">View active allocated student teams, members, and skill coverage</p>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="teams-grid" id="allocatedTeamsContainer">
+            <div style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary); padding: 3rem 0;">Loading allocated teams...</div>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/teams.js"></script>
+</body>
+</html>

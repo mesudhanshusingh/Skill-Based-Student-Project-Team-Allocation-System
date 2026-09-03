@@ -1,8 +1,33 @@
-const API_BASE_URL = '/api';
+const API_BASE_URL = (window.location.origin && window.location.origin.startsWith('http') && window.location.origin.includes(':8080')) 
+    ? '/api' 
+    : 'http://localhost:8080/api';
 
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     renderFooter();
 });
+
+function initTheme() {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark-theme');
+        document.body.classList.add('dark-theme');
+    }
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks && !document.getElementById('themeToggleBtn')) {
+        const li = document.createElement('li');
+        li.innerHTML = `<button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()">${document.body.classList.contains('dark-theme') ? '☀️ Light' : '🌙 Dark'}</button>`;
+        navLinks.appendChild(li);
+    }
+}
+
+function toggleTheme() {
+    document.documentElement.classList.toggle('dark-theme');
+    document.body.classList.toggle('dark-theme');
+    const isDark = document.body.classList.contains('dark-theme');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) btn.innerHTML = isDark ? '☀️ Light' : '🌙 Dark';
+}
 
 function renderFooter() {
     const footer = document.querySelector('footer');
