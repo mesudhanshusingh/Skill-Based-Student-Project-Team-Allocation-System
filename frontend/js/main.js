@@ -1,7 +1,4 @@
-const API_BASE_URL = (window.location.origin && window.location.origin.startsWith('http') && window.location.origin.includes(':8080')) 
-    ? '/api' 
-    : 'http://localhost:8080/api';
-
+const API_BASE_URL = 'https://skill-based-student-project-team.onrender.com/api';
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     renderFooter();
