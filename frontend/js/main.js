@@ -1,6 +1,8 @@
 const API_BASE_URL = 'https://skill-based-student-project-team.onrender.com/api';
+
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
+    initNavbarControls();
     renderFooter();
 });
 
@@ -9,13 +11,77 @@ function initTheme() {
         document.documentElement.classList.add('dark-theme');
         document.body.classList.add('dark-theme');
     }
+}
+
+function initNavbarControls() {
+    const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
+
+    let navControls = navbar.querySelector('.nav-controls');
+    if (!navControls) {
+        navControls = document.createElement('div');
+        navControls.className = 'nav-controls';
+        navbar.appendChild(navControls);
+    }
+
+    // 1. Theme Toggle Button (ALWAYS OUTSIDE hamburger menu)
+    if (!document.getElementById('themeToggleBtn')) {
+        const isDark = document.body.classList.contains('dark-theme');
+        const themeBtn = document.createElement('button');
+        themeBtn.id = 'themeToggleBtn';
+        themeBtn.className = 'theme-toggle-btn';
+        themeBtn.setAttribute('aria-label', 'Toggle Dark/Light Mode');
+        themeBtn.setAttribute('onclick', 'toggleTheme()');
+        themeBtn.innerHTML = isDark ? '☀️ Light' : '🌙 Dark';
+        navControls.appendChild(themeBtn);
+    }
+
+    // 2. Hamburger Menu Button (OUTSIDE hamburger menu beside Theme Toggle)
+    if (!document.getElementById('hamburgerBtn')) {
+        const hamburgerBtn = document.createElement('button');
+        hamburgerBtn.id = 'hamburgerBtn';
+        hamburgerBtn.className = 'hamburger-btn';
+        hamburgerBtn.setAttribute('aria-label', 'Toggle Navigation Menu');
+        hamburgerBtn.setAttribute('onclick', 'toggleMobileMenu()');
+        hamburgerBtn.innerHTML = '<span class="bar"></span><span class="bar"></span><span class="bar"></span>';
+        navControls.appendChild(hamburgerBtn);
+    }
+
+    // Close mobile dropdown when a nav link is clicked
     const navLinks = document.querySelector('.nav-links');
-    if (navLinks && !document.getElementById('themeToggleBtn')) {
-        const li = document.createElement('li');
-        li.innerHTML = `<button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()">${document.body.classList.contains('dark-theme') ? '☀️ Light' : '🌙 Dark'}</button>`;
-        navLinks.appendChild(li);
+    if (navLinks) {
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                closeMobileMenu();
+            });
+        });
     }
 }
+
+function toggleMobileMenu() {
+    const navLinks = document.querySelector('.nav-links');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    if (navLinks) navLinks.classList.toggle('mobile-active');
+    if (hamburgerBtn) hamburgerBtn.classList.toggle('active');
+}
+
+function closeMobileMenu() {
+    const navLinks = document.querySelector('.nav-links');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    if (navLinks) navLinks.classList.remove('mobile-active');
+    if (hamburgerBtn) hamburgerBtn.classList.remove('active');
+}
+
+// Close mobile dropdown if user clicks anywhere outside navbar
+document.addEventListener('click', (e) => {
+    const navbar = document.querySelector('.navbar');
+    const navLinks = document.querySelector('.nav-links');
+    if (navbar && navLinks && navLinks.classList.contains('mobile-active')) {
+        if (!navbar.contains(e.target)) {
+            closeMobileMenu();
+        }
+    }
+});
 
 function toggleTheme() {
     document.documentElement.classList.toggle('dark-theme');
